@@ -26,24 +26,23 @@ public class Main extends javax.swing.JFrame {
         m.addElement("Mi Unidad");
         m.addElement("Destacados");
         m.addElement("Papelera");
-        
+
         BinariosArchivo ap = new BinariosArchivo("./archivosTotales.cbm");
         ap.cargarArchivo();
         archivos = ap.getArchivos();
-        
+
         BinariosCarpetas ac = new BinariosCarpetas("./carpetasTotales.cbm");
         ac.cargarArchivo();
         carpetas = ac.getCarpetas();
-        
+
         BinariosArchivoFav af = new BinariosArchivoFav("./archivosFavoritos.cbm");
         af.cargarArchivo();
         archivosFav = af.getArchivos();
-        
+
         BinariosCarpetasFav az = new BinariosCarpetasFav("./carpetasFavoritas.cbm");
         az.cargarArchivo();
         carpetasFav = az.getCarpetas();
-        
-        
+
     }
 
     public void ActualizarArbol(DefaultMutableTreeNode raiz, ArrayList<Archivo> lista1, ArrayList<Carpeta> lista2) {
@@ -370,7 +369,7 @@ public class Main extends javax.swing.JFrame {
 
         Archivo archivo = new Archivo(nombre, link, extension, tamanio);
         archivos.add(archivo);
-        
+
         BinariosArchivo ap = new BinariosArchivo("./archivosTotales.cbm");
         ap.setArchivos(archivos);
         ap.escribirArchivo();
@@ -393,7 +392,7 @@ public class Main extends javax.swing.JFrame {
                 ActualizarArbol(raiz, archivos, carpetas);
                 arbol.reload();
 
-            } else if(jList1.getSelectedValue().equals("Destacados")){
+            } else if (jList1.getSelectedValue().equals("Destacados")) {
                 DefaultTreeModel arbol = (DefaultTreeModel) jTree1.getModel();
                 DefaultMutableTreeNode raiz = (DefaultMutableTreeNode) arbol.getRoot();
                 ActualizarArbol(raiz, archivosFav, carpetasFav);
@@ -434,7 +433,7 @@ public class Main extends javax.swing.JFrame {
         }
 
         carpetas.add(carpetaG);
-        
+
         BinariosCarpetas ac = new BinariosCarpetas("./carpetasTotales.cbm");
         ac.setCarpetas(carpetas);
         ac.escribirArchivo();
@@ -576,83 +575,104 @@ public class Main extends javax.swing.JFrame {
         BinariosArchivoFav ap = new BinariosArchivoFav("./archivosFavoritos.cbm");
         ap.setArchivos(archivosFav);
         ap.escribirArchivo();
-        
+
     }//GEN-LAST:event_jmi_FavArchivoActionPerformed
 
     private void jmi_carpetaPapeleraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_carpetaPapeleraActionPerformed
         // TODO add your handling code here:
         carpetasPapelera.add(carpetaSeleccionada);
-        
+
         for (int i = 0; i < carpetas.size(); i++) {
-            if(carpetas.get(i).equals(carpetaSeleccionada)){
+            if (carpetas.get(i).equals(carpetaSeleccionada)) {
                 carpetas.remove(i);
             }
         }
-        
+
         for (int i = 0; i < carpetasFav.size(); i++) {
-            if(carpetasFav.get(i).equals(carpetaSeleccionada)){
+            if (carpetasFav.get(i).equals(carpetaSeleccionada)) {
                 carpetasFav.remove(i);
             }
         }
-        
+
         BinariosCarpetas ac = new BinariosCarpetas("./carpetasTotales.cbm");
         ac.setCarpetas(carpetas);
         ac.escribirArchivo();
-        
+
     }//GEN-LAST:event_jmi_carpetaPapeleraActionPerformed
 
     private void jmi_archivoPapeleraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_archivoPapeleraActionPerformed
         // TODO add your handling code here:
         archivosPapelera.add(archivoSeleccionado);
-        
+
         for (int i = 0; i < archivos.size(); i++) {
-            if(archivos.get(i).equals(archivoSeleccionado)){
+            if (archivos.get(i).equals(archivoSeleccionado)) {
                 archivos.remove(archivoSeleccionado);
             }
         }
-        
+
         for (int i = 0; i < archivosFav.size(); i++) {
-            if(archivosFav.get(i).equals(archivoSeleccionado)){
+            if (archivosFav.get(i).equals(archivoSeleccionado)) {
                 archivosFav.remove(i);
             }
         }
-        
+
         BinariosArchivo ap = new BinariosArchivo("./archivosTotales.cbm");
         ap.setArchivos(archivos);
         ap.escribirArchivo();
-        
+        System.out.println("yay");
+
     }//GEN-LAST:event_jmi_archivoPapeleraActionPerformed
 
     private void VaciarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_VaciarMouseClicked
         // TODO add your handling code here:
         carpetasPapelera.clear();
         archivosPapelera.clear();
-        
+
     }//GEN-LAST:event_VaciarMouseClicked
 
     private void jmi_descargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_descargarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jmi_descargarActionPerformed
-
-    private void jmi_DescargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_DescargarActionPerformed
-        // TODO add your handling code here:
         
-        adminBarra barra = new adminBarra(jProgressBar1,archivoSeleccionado.getTamanio());
+        adminBarra barra = new adminBarra(jProgressBar1, 100);
         barra.start();
-        
+
         jProgressBar1.setValue(0);
+
+        for (int i = 0; i < carpetaSeleccionada.getArchivos().size(); i++) {
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            model.insertRow(model.getRowCount(), new Object[]{carpetaSeleccionada.getArchivos().get(i).getNombre(), carpetaSeleccionada.getArchivos().get(i).getExtension(), carpetaSeleccionada.getArchivos().get(i).getTamanio()});
+        }
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         
-         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-         model.insertRow(model.getRowCount(),new Object[]{archivoSeleccionado.getNombre(),archivoSeleccionado.getExtension(),archivoSeleccionado.getTamanio()});
         
+
         jd_table.setModal(true);
         jd_table.pack();
         jd_table.setLocationRelativeTo(this);
         jd_table.setVisible(true);
         
+        model.setRowCount(0);
+
+    }//GEN-LAST:event_jmi_descargarActionPerformed
+
+    private void jmi_DescargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_DescargarActionPerformed
+        // TODO add your handling code here:
+
+        adminBarra barra = new adminBarra(jProgressBar1, archivoSeleccionado.getTamanio());
+        barra.start();
+
+        jProgressBar1.setValue(0);
+
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.insertRow(model.getRowCount(), new Object[]{archivoSeleccionado.getNombre(), archivoSeleccionado.getExtension(), archivoSeleccionado.getTamanio()});
+
+        jd_table.setModal(true);
+        jd_table.pack();
+        jd_table.setLocationRelativeTo(this);
+        jd_table.setVisible(true);
         
-        
-        
+        model.setRowCount(0);
+
     }//GEN-LAST:event_jmi_DescargarActionPerformed
 
     /**
@@ -724,10 +744,10 @@ public class Main extends javax.swing.JFrame {
 
     private ArrayList<Archivo> archivos = new ArrayList();
     private ArrayList<Carpeta> carpetas = new ArrayList();
-    
+
     private ArrayList<Archivo> archivosFav = new ArrayList();
     private ArrayList<Carpeta> carpetasFav = new ArrayList();
-    
+
     private ArrayList<Archivo> archivosPapelera = new ArrayList();
     private ArrayList<Carpeta> carpetasPapelera = new ArrayList();
 
