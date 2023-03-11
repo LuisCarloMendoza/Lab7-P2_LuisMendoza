@@ -24,7 +24,7 @@ public class Main extends javax.swing.JFrame {
         DefaultListModel m = (DefaultListModel) jList1.getModel();
         m.addElement("Mi Unidad");
         m.addElement("Destacados");
-        m.addElement("Favoritos");
+        m.addElement("Papelera");
     }
 
     public void ActualizarArbol(DefaultMutableTreeNode raiz, ArrayList<Archivo> lista1, ArrayList<Carpeta> lista2) {
@@ -64,7 +64,12 @@ public class Main extends javax.swing.JFrame {
         jmi_agregarArchivo = new javax.swing.JMenuItem();
         jmi_agregarCarpeta = new javax.swing.JMenuItem();
         jmi_descargar = new javax.swing.JMenuItem();
+        jmi_FavCarpeta = new javax.swing.JMenuItem();
+        jmi_carpetaPapelera = new javax.swing.JMenuItem();
         pp_archivo = new javax.swing.JPopupMenu();
+        jmi_FavArchivo = new javax.swing.JMenuItem();
+        jmi_Descargar = new javax.swing.JMenuItem();
+        jmi_archivoPapelera = new javax.swing.JMenuItem();
         jd_listarArchivos = new javax.swing.JDialog();
         jScrollPane3 = new javax.swing.JScrollPane();
         jlist_listarTodo = new javax.swing.JList<>();
@@ -79,6 +84,7 @@ public class Main extends javax.swing.JFrame {
         jTree1 = new javax.swing.JTree();
         jb_crearArchivo = new javax.swing.JButton();
         jb_crearCarpeta = new javax.swing.JButton();
+        Vaciar = new javax.swing.JButton();
 
         jmi_agregarArchivo.setText("Agregar Archivo");
         jmi_agregarArchivo.addActionListener(new java.awt.event.ActionListener() {
@@ -98,6 +104,41 @@ public class Main extends javax.swing.JFrame {
 
         jmi_descargar.setText("Descargar");
         pp_carpeta.add(jmi_descargar);
+
+        jmi_FavCarpeta.setText("Like");
+        jmi_FavCarpeta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_FavCarpetaActionPerformed(evt);
+            }
+        });
+        pp_carpeta.add(jmi_FavCarpeta);
+
+        jmi_carpetaPapelera.setText("Papelera");
+        jmi_carpetaPapelera.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_carpetaPapeleraActionPerformed(evt);
+            }
+        });
+        pp_carpeta.add(jmi_carpetaPapelera);
+
+        jmi_FavArchivo.setText("Like");
+        jmi_FavArchivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_FavArchivoActionPerformed(evt);
+            }
+        });
+        pp_archivo.add(jmi_FavArchivo);
+
+        jmi_Descargar.setText("Descargar");
+        pp_archivo.add(jmi_Descargar);
+
+        jmi_archivoPapelera.setText("Papelera");
+        jmi_archivoPapelera.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_archivoPapeleraActionPerformed(evt);
+            }
+        });
+        pp_archivo.add(jmi_archivoPapelera);
 
         jlist_listarTodo.setModel(new DefaultListModel());
         jlist_listarTodo.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -192,15 +233,24 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        Vaciar.setText("Vaciar");
+        Vaciar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                VaciarMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(162, 162, 162)
+                .addGap(113, 113, 113)
                 .addComponent(jb_crearArchivo)
-                .addGap(63, 63, 63)
+                .addGap(28, 28, 28)
                 .addComponent(jb_crearCarpeta)
+                .addGap(38, 38, 38)
+                .addComponent(Vaciar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(63, 63, 63)
@@ -219,7 +269,8 @@ public class Main extends javax.swing.JFrame {
                 .addGap(50, 50, 50)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jb_crearArchivo)
-                    .addComponent(jb_crearCarpeta))
+                    .addComponent(jb_crearCarpeta)
+                    .addComponent(Vaciar))
                 .addContainerGap(73, Short.MAX_VALUE))
         );
 
@@ -267,6 +318,16 @@ public class Main extends javax.swing.JFrame {
                 ActualizarArbol(raiz, archivos, carpetas);
                 arbol.reload();
 
+            } else if(jList1.getSelectedValue().equals("Destacados")){
+                DefaultTreeModel arbol = (DefaultTreeModel) jTree1.getModel();
+                DefaultMutableTreeNode raiz = (DefaultMutableTreeNode) arbol.getRoot();
+                ActualizarArbol(raiz, archivosFav, carpetasFav);
+                arbol.reload();
+            } else {
+                DefaultTreeModel arbol = (DefaultTreeModel) jTree1.getModel();
+                DefaultMutableTreeNode raiz = (DefaultMutableTreeNode) arbol.getRoot();
+                ActualizarArbol(raiz, archivosPapelera, carpetasPapelera);
+                arbol.reload();
             }
         }
 
@@ -315,7 +376,7 @@ public class Main extends javax.swing.JFrame {
                 pp_carpeta.show(evt.getComponent(), evt.getX(), evt.getY());
             } else if (nodo_seleccionado.getUserObject() instanceof Archivo) {
                 archivoSeleccionado = (Archivo) nodo_seleccionado.getUserObject();
-//                popup_clase.show(evt.getComponent(), evt.getX(), evt.getY());
+                pp_archivo.show(evt.getComponent(), evt.getX(), evt.getY());
 
             }
 
@@ -365,7 +426,6 @@ public class Main extends javax.swing.JFrame {
 
                 }
             }
-            
 
             modelo.reload();
 
@@ -385,13 +445,13 @@ public class Main extends javax.swing.JFrame {
             lista.addElement(carpetas.get(i));
         }
         jl_listarCarpetas.setModel(lista);
-        
+
         jd_listarCarpetas.setModal(true);
         jd_listarCarpetas.pack();
         jd_listarCarpetas.setLocationRelativeTo(this);
         jd_listarCarpetas.setVisible(true);
-        
-        
+
+
     }//GEN-LAST:event_jmi_agregarCarpetaActionPerformed
 
     private void jl_listarCarpetasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jl_listarCarpetasMouseClicked
@@ -415,13 +475,68 @@ public class Main extends javax.swing.JFrame {
 
                 }
             }
-            
 
             modelo.reload();
 
         }
-        
+
     }//GEN-LAST:event_jl_listarCarpetasMouseClicked
+
+    private void jmi_FavCarpetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_FavCarpetaActionPerformed
+        // TODO add your handling code here:
+        carpetasFav.add(carpetaSeleccionada);
+        
+
+    }//GEN-LAST:event_jmi_FavCarpetaActionPerformed
+
+    private void jmi_FavArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_FavArchivoActionPerformed
+        // TODO add your handling code here:
+        archivosFav.add(archivoSeleccionado);
+        
+    }//GEN-LAST:event_jmi_FavArchivoActionPerformed
+
+    private void jmi_carpetaPapeleraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_carpetaPapeleraActionPerformed
+        // TODO add your handling code here:
+        carpetasPapelera.add(carpetaSeleccionada);
+        
+        for (int i = 0; i < carpetas.size(); i++) {
+            if(carpetas.get(i).equals(carpetaSeleccionada)){
+                carpetas.remove(i);
+            }
+        }
+        
+        for (int i = 0; i < carpetasFav.size(); i++) {
+            if(carpetasFav.get(i).equals(carpetaSeleccionada)){
+                carpetasFav.remove(i);
+            }
+        }
+        
+    }//GEN-LAST:event_jmi_carpetaPapeleraActionPerformed
+
+    private void jmi_archivoPapeleraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_archivoPapeleraActionPerformed
+        // TODO add your handling code here:
+        archivosPapelera.add(archivoSeleccionado);
+        
+        for (int i = 0; i < archivos.size(); i++) {
+            if(archivos.get(i).equals(archivoSeleccionado)){
+                archivos.remove(archivoSeleccionado);
+            }
+        }
+        
+        for (int i = 0; i < archivosFav.size(); i++) {
+            if(archivosFav.get(i).equals(archivoSeleccionado)){
+                archivosFav.remove(i);
+            }
+        }
+        
+    }//GEN-LAST:event_jmi_archivoPapeleraActionPerformed
+
+    private void VaciarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_VaciarMouseClicked
+        // TODO add your handling code here:
+        carpetasPapelera.clear();
+        archivosPapelera.clear();
+        
+    }//GEN-LAST:event_VaciarMouseClicked
 
     /**
      * @param args the command line arguments
@@ -459,6 +574,7 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Vaciar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
@@ -473,8 +589,13 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JDialog jd_listarCarpetas;
     private javax.swing.JList<Carpeta> jl_listarCarpetas;
     private javax.swing.JList<Archivo> jlist_listarTodo;
+    private javax.swing.JMenuItem jmi_Descargar;
+    private javax.swing.JMenuItem jmi_FavArchivo;
+    private javax.swing.JMenuItem jmi_FavCarpeta;
     private javax.swing.JMenuItem jmi_agregarArchivo;
     private javax.swing.JMenuItem jmi_agregarCarpeta;
+    private javax.swing.JMenuItem jmi_archivoPapelera;
+    private javax.swing.JMenuItem jmi_carpetaPapelera;
     private javax.swing.JMenuItem jmi_descargar;
     private javax.swing.JPopupMenu pp_archivo;
     private javax.swing.JPopupMenu pp_carpeta;
@@ -482,9 +603,12 @@ public class Main extends javax.swing.JFrame {
 
     private ArrayList<Archivo> archivos = new ArrayList();
     private ArrayList<Carpeta> carpetas = new ArrayList();
-    private ArrayList <Archivo> archivosFav = new ArrayList();
+    
+    private ArrayList<Archivo> archivosFav = new ArrayList();
     private ArrayList<Carpeta> carpetasFav = new ArrayList();
     
+    private ArrayList<Archivo> archivosPapelera = new ArrayList();
+    private ArrayList<Carpeta> carpetasPapelera = new ArrayList();
 
     private Carpeta carpetaG;
     DefaultMutableTreeNode nodo_seleccionado;
