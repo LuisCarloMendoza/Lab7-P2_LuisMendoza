@@ -7,6 +7,7 @@ package luismendoza_lab7p2;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -232,15 +233,20 @@ public class Main extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Nombre", "Extension", "Tamaño"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane5.setViewportView(jTable1);
 
         javax.swing.GroupLayout jd_tableLayout = new javax.swing.GroupLayout(jd_table.getContentPane());
@@ -635,6 +641,9 @@ public class Main extends javax.swing.JFrame {
         barra.start();
         
         jProgressBar1.setValue(0);
+        
+         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+         model.insertRow(model.getRowCount(),new Object[]{archivoSeleccionado.getNombre(),archivoSeleccionado.getExtension(),archivoSeleccionado.getTamanio()});
         
         jd_table.setModal(true);
         jd_table.pack();
