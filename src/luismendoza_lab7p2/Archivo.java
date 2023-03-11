@@ -4,11 +4,13 @@
  */
 package luismendoza_lab7p2;
 
+import java.io.Serializable;
+
 /**
  *
  * @author luiscarlomendoza
  */
-public class Archivo {
+public class Archivo implements Serializable{
     private String nombre,link,extension;
     private double tamanio;
 

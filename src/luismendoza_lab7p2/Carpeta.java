@@ -4,13 +4,14 @@
  */
 package luismendoza_lab7p2;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author luiscarlomendoza
  */
-public class Carpeta {
+public class Carpeta implements Serializable{
     private String nombre,link;
     private ArrayList <Archivo> archivos = new ArrayList();
     private ArrayList <Carpeta> carpetas = new ArrayList();
